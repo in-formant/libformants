@@ -2,6 +2,8 @@
 
 ## Usage
 
+To use the library you'll need to include the `libformants.h` header and in one of your compilation units (usually a `.c` file) define the `FORMANTS_IMPLEMENTATION` macro before including it.
+
 First you need to create a workspace object, that will be reused between analysis runs.
 
 ```c
