@@ -193,7 +193,7 @@ complex_t cplx_div(complex_t a, complex_t b)
 
 sample cplx_abs(complex_t z)
 {
-    return norm(z);
+    return cabs(z);
 }
 
 sample cplx_arg(complex_t z)
