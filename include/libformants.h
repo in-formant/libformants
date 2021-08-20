@@ -44,6 +44,7 @@ typedef FORMANTS_FLOAT sample;
 #define formants_make_work                                  NS(make_work)
 #define formants_destroy_work                               NS(destroy_work)
 #define formants_analyze                                    NS(analyze)
+#define formants_destroy                                    NS(destroy)
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,6 +119,8 @@ formant_t *formants_calculate_from_roots(const complex_t *roots,
                                             sample sampleRate,
                                             sample margin,
                                             unsigned long *formantCount);
+
+void formants_destroy(formant_t *formants);
 
 work_t *formants_make_work(unsigned long length, unsigned long order);
 
@@ -493,6 +496,10 @@ formant_t *formants_calculate_from_roots(const complex_t *roots, unsigned long r
     }
     *formantCount = k;
     return formants;
+}
+
+void formants_destroy(formant_t *formants) {
+    free(formants);
 }
 
 work_t *formants_make_work(unsigned long length, unsigned long order)
