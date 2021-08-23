@@ -279,6 +279,7 @@ void formants_destroy_lpc_work(lpc_work_t *lpcWork)
         free(lpcWork->b2);
         free(lpcWork->aa);
         free(lpcWork->win);
+        free(lpcWork);
     }
 }
 
@@ -299,6 +300,7 @@ void formants_destroy_lpc(lpc_t *lpc)
     if (lpc) {
         free(lpc->data);
         formants_destroy_lpc_work(lpc->work);
+        free(lpc);
     }
 }
 
@@ -392,6 +394,7 @@ void formants_destroy_root_solver(root_solver_t *solver)
 {
     if (solver) {
         free(solver->roots);
+        free(solver);
     }
 }
 
@@ -519,6 +522,7 @@ void formants_destroy_work(work_t *work)
     if (work) {
         formants_destroy_lpc(work->lpc);
         formants_destroy_root_solver(work->rootSolver);
+        free(work);
     }
 }
 
