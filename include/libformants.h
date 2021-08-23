@@ -479,9 +479,10 @@ void formants_solve_roots(root_solver_t *solver, const sample *coefs, unsigned l
 
 formant_t *formants_calculate_from_roots(const complex_t *roots, unsigned long rootCount, sample sampleRate, sample margin, unsigned long *formantCount)
 {
-    formant_t *formants = (formant_t *) malloc((rootCount / 2) * sizeof(formant_t));
+    size_t formantsLen = rootCount / 2;
+    formant_t *formants = (formant_t *) malloc(formantsLen * sizeof(formant_t));
     unsigned long k = 0;
-    for (unsigned long i = 0; i < rootCount; ++i) {
+    for (unsigned long i = 0; i < rootCount && k < formantsLen; ++i) {
         if (cplx_imag(roots[i]) < 0)
             continue;
 
