@@ -44,6 +44,7 @@ typedef FORMANTS_FLOAT sample;
 #define formants_make_work                                  NS(make_work)
 #define formants_destroy_work                               NS(destroy_work)
 #define formants_analyze                                    NS(analyze)
+#define formants_destroy                                    NS(destroy)
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,6 +119,8 @@ formant_t *formants_calculate_from_roots(const complex_t *roots,
                                             sample sampleRate,
                                             sample margin,
                                             unsigned long *formantCount);
+
+void formants_destroy(formant_t *formants);
 
 work_t *formants_make_work(unsigned long length, unsigned long order);
 
@@ -276,6 +279,7 @@ void formants_destroy_lpc_work(lpc_work_t *lpcWork)
         free(lpcWork->b2);
         free(lpcWork->aa);
         free(lpcWork->win);
+        free(lpcWork);
     }
 }
 
@@ -296,6 +300,7 @@ void formants_destroy_lpc(lpc_t *lpc)
     if (lpc) {
         free(lpc->data);
         formants_destroy_lpc_work(lpc->work);
+        free(lpc);
     }
 }
 
@@ -389,6 +394,7 @@ void formants_destroy_root_solver(root_solver_t *solver)
 {
     if (solver) {
         free(solver->roots);
+        free(solver);
     }
 }
 
@@ -473,9 +479,10 @@ void formants_solve_roots(root_solver_t *solver, const sample *coefs, unsigned l
 
 formant_t *formants_calculate_from_roots(const complex_t *roots, unsigned long rootCount, sample sampleRate, sample margin, unsigned long *formantCount)
 {
-    formant_t *formants = (formant_t *) malloc((rootCount / 2) * sizeof(formant_t));
+    size_t formantsLen = rootCount / 2;
+    formant_t *formants = (formant_t *) malloc(formantsLen * sizeof(formant_t));
     unsigned long k = 0;
-    for (unsigned long i = 0; i < rootCount; ++i) {
+    for (unsigned long i = 0; i < rootCount && k < formantsLen; ++i) {
         if (cplx_imag(roots[i]) < 0)
             continue;
 
@@ -495,6 +502,10 @@ formant_t *formants_calculate_from_roots(const complex_t *roots, unsigned long r
     return formants;
 }
 
+void formants_destroy(formant_t *formants) {
+    free(formants);
+}
+
 work_t *formants_make_work(unsigned long length, unsigned long order)
 {
     work_t *work = (work_t *) malloc(sizeof(work_t));
@@ -512,6 +523,7 @@ void formants_destroy_work(work_t *work)
     if (work) {
         formants_destroy_lpc(work->lpc);
         formants_destroy_root_solver(work->rootSolver);
+        free(work);
     }
 }
 
